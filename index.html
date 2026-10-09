@@ -4,40 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RaHa BIO - خميرة بلدية أعشاب طبيعية</title>
-    <!-- هنا يتم وضع كود صفحة الهبوط الخاص بك -->
+    <style>
+        body { font-family: Tahoma, sans-serif; background: #f9f9f9; direction: rtl; text-align: right; padding: 20px; }
+        .form-container, .thank-you { background: #fff; padding: 20px; border-radius: 8px; max-width: 500px; margin: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        input, select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background: #27ae60; color: white; padding: 12px; width: 100%; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #219653; }
+        .thank-you { text-align: center; display: none; }
+    </style>
 </head>
 <body>
 
-    <!-- نموذج الطلب (مثال للسكริبت المسؤول عن الإرسال) -->
-    <form id="orderForm">
-        <input type="text" name="name" placeholder="الاسم الكامل" required>
-        <input type="tel" name="phone" placeholder="رقم الهاتف" required>
-        <input type="text" name="city" placeholder="المدينة" required>
-        <input type="text" name="addr" placeholder="العنوان (اختياري)">
-        <select name="offer">
-            <option value="عرض عبوة واحدة">عرض عبوة واحدة</option>
-            <option value="عرض عبوتين بخصم">عرض عبوتين بخصم</option>
-        </select>
-        <button type="submit">تأكيد الطلب</button>
-    </form>
+    <div class="form-container" id="formContainer">
+        <h2>طلب منتج RaHa BIO</h2>
+        <form id="orderForm">
+            <label>الاسم الكامل:</label>
+            <input type="text" name="name" required placeholder="أدخل اسمك الكامل">
+            
+            <label>رقم الهاتف:</label>
+            <input type="tel" name="phone" required placeholder="06xxxxxxxx">
+            
+            <label>المدينة:</label>
+            <input type="text" name="city" required placeholder="مثال: الدار البيضاء">
+            
+            <label>العنوان (اختياري):</label>
+            <input type="text" name="addr" placeholder="الشارع، الحي...">
+            
+            <label>اختر العرض:</label>
+            <select name="offer">
+                <option value="عرض عبوة واحدة">عرض عبوة واحدة</option>
+                <option value="عرض عبوتين بخصم">عرض عبوتين بخصم</option>
+            </select>
+            
+            <button type="submit" id="submitBtn">تأكيد الطلب الآن</button>
+        </form>
+    </div>
 
-    <div id="thankYouMessage" style="display:none;">
-        <h2>شكراً لك! تم تسجيل طلبك بنجاح. سنتواصل معك قريباً لتأكيد التوصيل.</h2>
+    <div class="thank-you" id="thankYouMessage">
+        <h2 style="color: #27ae60;">شكراً لك!</h2>
+        <p>تم تسجيل طلبك بنجاح. سيتم الاتصال بك قريباً لتأكيد عملية التوصيل.</p>
     </div>
 
     <script>
-        // رابط السكريبت الخاص بك المربوط بـ Google Sheet
-        var SCRIPT_URL = "https://script.google.com/macros/s/AKfycybm5ehfB_xRCTRjeDNJHYmfEcSHkHsOkzf9qHyvw6F/exec";
+        // رابط السكريبت الخاص بـ Google Sheet
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycybm5ehfB_xRCTRjeDNJHYmfEcSHkHsOkzf9qHyvw6F/exec";
 
         const form = document.getElementById('orderForm');
+        const submitBtn = document.getElementById('submitBtn');
+
         form.addEventListener('submit', function(e) {
-            e.preventDefault();
+            e.preventDefault(); // منع إعادة تحميل الصفحة أو تحويلها لأي رابط آخر
             
-            var formData = {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'جاري إرسال طلبك...';
+
+            const formData = {
                 name: form.name.value,
                 phone: form.phone.value,
                 city: form.city.value,
-                addr: form.addr.value,
+                addr: form.addr.value || "بدون عنوان",
                 offer: form.offer.value
             };
 
@@ -49,10 +74,14 @@
                 },
                 body: JSON.stringify(formData)
             }).then(() => {
-                form.style.display = 'none';
+                // إخفاء الفอร์م وإظهار رسالة الشكر
+                document.getElementById('formContainer').style.display = 'none';
                 document.getElementById('thankYouMessage').style.display = 'block';
             }).catch(error => {
+                console.error('Error!', error);
                 alert('حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'تأكيد الطلب الآن';
             });
         });
     </script>
