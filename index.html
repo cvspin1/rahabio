@@ -142,8 +142,6 @@ footer{border-top:1px solid var(--line);padding:24px 0 100px;text-align:center;c
     <p class="err" id="fe" role="alert"></p>
     <button class="btn gold full" type="submit" id="sb">تأكيد الطلب</button>
   </form>
-  <p style="text-align:center;margin:16px 0 0;color:var(--mut)">أو اطلب مباشرة بالاتصال:</p>
-  <a class="btn full" href="tel:+212784592883" dir="ltr" style="margin-top:8px">📞 +212 784-592883</a>
 </section>
 
 <section>
@@ -167,10 +165,10 @@ footer{border-top:1px solid var(--line);padding:24px 0 100px;text-align:center;c
 
 <script>
 (function(){
-  // الصق هنا رابط Google Apps Script (ينتهي بـ /exec)
-  var SHEET_URL = "https://script.google.com/macros/s/AKfycbzE9d8aIDdJx48rClyQpyc8z-meooKP5b1uUUMzqIDCGNIXNz3sHMNaTmGtpzXewbCawA/exec";
+  // رقم الواتساب ديالك (صيغة دولية بدون + ولا فراغات)
+  var WA = "212784592883";
   var f = document.getElementById('f');
-  var fe = document.getElementById('fe'), sb = document.getElementById('sb');
+  var fe = document.getElementById('fe');
   function setErr(n,m){var e=f.querySelector('[data-for="'+n+'"]');if(e)e.textContent=m||''}
   f.addEventListener('submit',function(ev){
     ev.preventDefault();
@@ -181,11 +179,14 @@ footer{border-top:1px solid var(--line);padding:24px 0 100px;text-align:center;c
     if(!/^(\+212|00212|0)[5-7]\d{8}$/.test(d.phone)){setErr('phone','دخل رقم هاتف مغربي صحيح');bad=true}
     if(d.city.length<2){setErr('city','دخل المدينة');bad=true}
     if(bad)return;
-    if(SHEET_URL.indexOf('PASTE_')===0){fe.textContent='رابط Google Sheets ما تحطش بعد في الكود.';return}
-    sb.disabled=true;sb.textContent='جاري الإرسال...';
-    fetch(SHEET_URL,{method:'POST',mode:'no-cors',body:new URLSearchParams(d)})
-      .then(function(){window.location.href='thank-you.html'})
-      .catch(function(){sb.disabled=false;sb.textContent='تأكيد الطلب';fe.textContent='وقع مشكل، عاود حاول من فضلك.'});
+    var msg="طلب جديد - راحة بيو\n"+
+            "العرض: "+d.offer+"\n"+
+            "الاسم: "+d.name+"\n"+
+            "الهاتف: "+d.phone+"\n"+
+            "المدينة: "+d.city+
+            (d.addr?"\nالعنوان: "+d.addr:"")+
+            "\nالدفع عند الاستلام";
+    window.location.href="https://wa.me/"+WA+"?text="+encodeURIComponent(msg);
   });
 })();
 </script>
