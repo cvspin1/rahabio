@@ -142,6 +142,8 @@ footer{border-top:1px solid var(--line);padding:24px 0 100px;text-align:center;c
     <p class="err" id="fe" role="alert"></p>
     <button class="btn gold full" type="submit" id="sb">تأكيد الطلب</button>
   </form>
+  <p style="text-align:center;margin:16px 0 0;color:var(--mut)">أو اطلب مباشرة بالاتصال:</p>
+  <a class="btn full" href="tel:+212784592883" dir="ltr" style="margin-top:8px">📞 +212 784-592883</a>
 </section>
 
 <section>
@@ -156,6 +158,8 @@ footer{border-top:1px solid var(--line);padding:24px 0 100px;text-align:center;c
 
 <footer><div class="wrap">
   <b style="color:var(--green)">راحة بيو · RaHa BIO</b><br>
+  📞 للتواصل: <a href="tel:+212784592883" dir="ltr" style="color:var(--green);font-weight:700">+212 784-592883</a><br>
+  📷 <a href="https://www.instagram.com/raha_bio1/" target="_blank" rel="noopener" style="color:var(--green);font-weight:700">@raha_bio1</a><br>
   جميع الحقوق محفوظة © 2026
 </div></footer>
 
@@ -174,7 +178,7 @@ footer{border-top:1px solid var(--line);padding:24px 0 100px;text-align:center;c
     var bad=false;
     setErr('name');setErr('phone');setErr('city');fe.textContent='';
     if(d.name.length<3){setErr('name','دخل اسمك الكامل');bad=true}
-    if(!/^(\+212 784-592883)[5-7]\d{8}$/.test(d.phone)){setErr('phone','دخل رقم هاتف مغربي صحيح');bad=true}
+    if(!/^(\+212|00212|0)[5-7]\d{8}$/.test(d.phone)){setErr('phone','دخل رقم هاتف مغربي صحيح');bad=true}
     if(d.city.length<2){setErr('city','دخل المدينة');bad=true}
     if(bad)return;
     if(SHEET_URL.indexOf('PASTE_')===0){fe.textContent='رابط Google Sheets ما تحطش بعد في الكود.';return}
