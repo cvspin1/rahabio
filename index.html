@@ -174,7 +174,7 @@ footer{border-top:1px solid var(--line);padding:24px 0 100px;text-align:center;c
     var bad=false;
     setErr('name');setErr('phone');setErr('city');fe.textContent='';
     if(d.name.length<3){setErr('name','دخل اسمك الكامل');bad=true}
-    if(!/^(\+212|00212|0)[5-7]\d{8}$/.test(d.phone)){setErr('phone','دخل رقم هاتف مغربي صحيح');bad=true}
+    if(!/^(\+212 784-592883)[5-7]\d{8}$/.test(d.phone)){setErr('phone','دخل رقم هاتف مغربي صحيح');bad=true}
     if(d.city.length<2){setErr('city','دخل المدينة');bad=true}
     if(bad)return;
     if(SHEET_URL.indexOf('PASTE_')===0){fe.textContent='رابط Google Sheets ما تحطش بعد في الكود.';return}
