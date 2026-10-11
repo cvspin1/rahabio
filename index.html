@@ -55,6 +55,8 @@ form h3{margin:0;font-size:21px;color:var(--green)}
 label{display:grid;gap:6px;font-weight:600;font-size:16px}
 input,select{font:inherit;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--cream);color:var(--ink);width:100%}
 .err{color:#c0392b;font-size:14px;min-height:1.2em;font-weight:400}
+.ok{display:none;text-align:center;background:#fff;border:2px solid var(--green);border-radius:18px;padding:22px;margin-top:18px}
+.ok.on{display:block}
 details{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px}
 summary{cursor:pointer;font-weight:700}
 details p{margin:8px 0 0;color:var(--mut)}
@@ -139,9 +141,13 @@ footer{border-top:1px solid var(--line);padding:24px 0 100px;text-align:center;c
         <option value="2 علب - 119 درهم">2 علب بـ 119 درهم (توصيل مجاني)</option>
       </select>
     </label>
-    <p class="err" id="fe" role="alert"></p>
-    <button class="btn gold full" type="submit" id="sb">تأكيد الطلب</button>
+    <button class="btn gold full" type="submit">تأكيد الطلب</button>
   </form>
+
+  <div class="ok" id="ok" role="status" tabindex="-1">
+    <h2 style="margin-bottom:8px">شكراً لك! 🎉</h2>
+    <p style="margin:0">تم فتح الواتساب لإرسال طلبك. إلا ما تفتحش، غادي نتصلو بيك قريباً لتأكيد الطلب.</p>
+  </div>
 </section>
 
 <section>
@@ -163,24 +169,22 @@ footer{border-top:1px solid var(--line);padding:24px 0 100px;text-align:center;c
 
 <script>
 (function(){
-  var SHEET_URL = "https://script.google.com/macros/s/AKfycbybm5ehfB_xRCTRjeDNJHYmfEcSHkHsOkzf9qHyvw6F/dev";
-  var f = document.getElementById('f');
-  var fe = document.getElementById('fe'), sb = document.getElementById('sb');
+  // تم تحديث رقم الواتساب برقمك الخاص
+  var WA = "212784592883";
+  var f = document.getElementById('f'), ok = document.getElementById('ok');
   function setErr(n,m){var e=f.querySelector('[data-for="'+n+'"]');if(e)e.textContent=m||''}
   f.addEventListener('submit',function(ev){
     ev.preventDefault();
     var d={name:f.name.value.trim(),phone:f.phone.value.replace(/[\s.-]/g,''),city:f.city.value.trim(),addr:f.addr.value.trim(),offer:f.offer.value};
     var bad=false;
-    setErr('name');setErr('phone');setErr('city');fe.textContent='';
+    setErr('name');setErr('phone');setErr('city');
     if(d.name.length<3){setErr('name','دخل اسمك الكامل');bad=true}
     if(!/^(\+212|00212|0)[5-7]\d{8}$/.test(d.phone)){setErr('phone','دخل رقم هاتف مغربي صحيح');bad=true}
     if(d.city.length<2){setErr('city','دخل المدينة');bad=true}
     if(bad)return;
-    if(SHEET_URL.indexOf('PASTE_')===0){fe.textContent='رابط Google Sheets ما تحطش بعد في الكود.';return}
-    sb.disabled=true;sb.textContent='جاري الإرسال...';
-    fetch(SHEET_URL,{method:'POST',mode:'no-cors',body:new URLSearchParams(d)})
-      .then(function(){window.location.href='thank-you.html'})
-      .catch(function(){sb.disabled=false;sb.textContent='تأكيد الطلب';fe.textContent='وقع مشكل، عاود حاول من فضلك.'});
+    var msg="طلب جديد - راحة بيو\nالعرض: "+d.offer+"\nالاسم: "+d.name+"\nالهاتف: "+d.phone+"\nالمدينة: "+d.city+(d.addr?"\nالعنوان: "+d.addr:"")+"\nالدفع عند الاستلام";
+    ok.classList.add('on');f.style.display='none';ok.focus();
+    window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(msg),"_blank");
   });
 })();
 </script>
